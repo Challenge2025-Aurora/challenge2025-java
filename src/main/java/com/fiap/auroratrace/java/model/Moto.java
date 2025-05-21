@@ -1,5 +1,6 @@
 package com.fiap.auroratrace.java.model;
 
+import com.fiap.auroratrace.java.Enum.StatusMoto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
