@@ -25,7 +25,7 @@ public class PatioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patio> buscar(@PathVariable Long id) {
+    public ResponseEntity<Patio> buscar(@PathVariable Integer id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
@@ -35,7 +35,7 @@ public class PatioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

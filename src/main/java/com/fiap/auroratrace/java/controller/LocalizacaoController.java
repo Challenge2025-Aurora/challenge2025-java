@@ -25,7 +25,7 @@ public class LocalizacaoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Localizacao> buscar(@PathVariable Long id) {
+    public ResponseEntity<Localizacao> buscar(@PathVariable Integer id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
@@ -35,7 +35,7 @@ public class LocalizacaoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

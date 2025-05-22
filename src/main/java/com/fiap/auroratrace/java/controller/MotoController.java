@@ -25,7 +25,7 @@ public class MotoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Moto> buscar(@PathVariable Long id) {
+    public ResponseEntity<Moto> buscar(@PathVariable Integer id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
@@ -35,7 +35,7 @@ public class MotoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
