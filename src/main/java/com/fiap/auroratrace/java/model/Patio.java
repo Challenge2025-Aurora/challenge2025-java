@@ -6,26 +6,19 @@ import jakarta.validation.constraints.*;
 @Entity
 public class Patio {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
+    @Size(max = 50)
+    private String nomePatio;
 
     @NotBlank
-    private String nome;
-
-    @NotBlank
-    private String endereco;
-
-    @NotBlank
-    private String cidade;
-
-    private double tamanhoMetros;
+    @Size(max = 100)
+    private String endPatio;
 
     protected Patio() {}
 
-    public Patio(String nome, String endereco, String cidade, double tamanhoMetros) {
-        this.nome = nome;
-        this.endereco = endereco;
-        this.cidade = cidade;
-        this.tamanhoMetros = tamanhoMetros;
+    public Patio(String nomePatio, String endPatio) {
+        this.nomePatio = nomePatio;
+        this.endPatio = endPatio;
     }
 }

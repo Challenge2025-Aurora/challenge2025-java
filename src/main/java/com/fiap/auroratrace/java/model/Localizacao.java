@@ -1,23 +1,41 @@
 package com.fiap.auroratrace.java.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.*;
+import java.util.Date;
 
 @Entity
 public class Localizacao {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    private double latitude;
-    private double longitude;
-    private LocalDateTime registradaEm;
+    @Size(max = 50)
+    private String posicaoLoc;
+
+    @NotNull
+    private Double latitude;
+
+    @NotNull
+    private Double longitude;
+
+    @Size(max = 15)
+    private String origemLoc;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datahoraLoc;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "camera_id_cam")
+    private Camera camera;
 
     protected Localizacao() {}
 
-    public Localizacao(double latitude, double longitude) {
+    public Localizacao(String posicaoLoc, Double latitude, Double longitude, String origemLoc, Date datahoraLoc, Camera camera) {
+        this.posicaoLoc = posicaoLoc;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.registradaEm = LocalDateTime.now();
+        this.origemLoc = origemLoc;
+        this.datahoraLoc = datahoraLoc;
+        this.camera = camera;
     }
 }

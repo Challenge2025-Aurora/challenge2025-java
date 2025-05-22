@@ -2,32 +2,33 @@ package com.fiap.auroratrace.java.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 public class Imagem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @NotBlank
-    private String caminhoArquivo;
+    @Size(max = 15)
+    private String origemImg;
 
-    private LocalDateTime capturadaEm;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datahoraImg;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "camera_id_cam")
     private Camera camera;
 
-    @ManyToOne
-    private Moto moto;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "funcionario_id_func")
+    private Funcionario funcionario;
 
     protected Imagem() {}
 
-    public Imagem(String caminhoArquivo, Camera camera, Moto moto) {
-        if (caminhoArquivo == null || caminhoArquivo.isBlank()) throw new RuntimeException("Caminho da imagem é obrigatório");
-        this.caminhoArquivo = caminhoArquivo;
+    public Imagem(String origemImg, Date datahoraImg, Camera camera, Funcionario funcionario) {
+        this.origemImg = origemImg;
+        this.datahoraImg = datahoraImg;
         this.camera = camera;
-        this.moto = moto;
-        this.capturadaEm = LocalDateTime.now();
+        this.funcionario = funcionario;
     }
 }

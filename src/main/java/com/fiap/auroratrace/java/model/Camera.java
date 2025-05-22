@@ -2,33 +2,32 @@ package com.fiap.auroratrace.java.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class Camera {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
+    @Size(max = 50)
+    private String nomeCam;
+
+    @Size(max = 30)
+    private String localizacaoCam;
 
     @NotBlank
-    private String nome;
-
-    @NotBlank
-    private String posicao;
+    @Size(max = 200)
+    private String ipCam;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "patio_id_patio")
     private Patio patio;
-
-    private LocalDateTime instaladaEm;
 
     protected Camera() {}
 
-    public Camera(String nome, String posicao, Patio patio) {
-        if (nome == null || nome.isBlank()) throw new RuntimeException("Nome da câmera é obrigatório");
-        if (posicao == null || posicao.isBlank()) throw new RuntimeException("Posição da câmera é obrigatória");
-        this.nome = nome;
-        this.posicao = posicao;
+    public Camera(String nomeCam, String localizacaoCam, String ipCam, Patio patio) {
+        this.nomeCam = nomeCam;
+        this.localizacaoCam = localizacaoCam;
+        this.ipCam = ipCam;
         this.patio = patio;
-        this.instaladaEm = LocalDateTime.now();
     }
 }

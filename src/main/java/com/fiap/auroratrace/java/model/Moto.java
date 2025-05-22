@@ -9,47 +9,37 @@ import java.util.regex.Pattern;
 @Entity
 public class Moto {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank
-    private String placa;
+    private Integer id;
 
     @NotBlank
     private String modelo;
 
-    @Enumerated(EnumType.STRING)
-    private StatusMoto status;
+    @NotBlank
+    @Size(max = 15)
+    private String placa;
 
-    private LocalDateTime ultimaAtualizacao;
+    @Size(max = 20)
+    private String cor;
+
+    @Size(max = 20)
+    private String status;
 
     @ManyToOne(optional = false)
-    private Patio patio;
-
-    @ManyToOne
-    private Funcionario funcionario;
-
-    @ManyToOne(optional = false)
+    @JoinColumn(name = "localizacao_id_loc")
     private Localizacao localizacao;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "patio_id_patio")
+    private Patio patio;
 
     protected Moto() {}
 
-    public Moto(String placa, String modelo, StatusMoto status, Patio patio, Localizacao localizacao, Funcionario funcionario) {
-        validarPlaca(placa);
-        this.placa = placa;
+    public Moto(String modelo, String placa, String cor, String status, Localizacao localizacao, Patio patio) {
         this.modelo = modelo;
+        this.placa = placa;
+        this.cor = cor;
         this.status = status;
-        this.ultimaAtualizacao = LocalDateTime.now();
-        this.patio = patio;
         this.localizacao = localizacao;
-        this.funcionario = funcionario;
-    }
-
-    private void validarPlaca(String placa) {
-        if (placa == null || placa.trim().isEmpty()) throw new RuntimeException("Placa é obrigatória");
-        String regex = "^[A-Z]{3}\\d{4}$|^[A-Z]{3}[0-9][A-Z][0-9]{2}$";
-        if (!Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher(placa).matches()) {
-            throw new RuntimeException("Placa inválida: " + placa);
-        }
+        this.patio = patio;
     }
 }

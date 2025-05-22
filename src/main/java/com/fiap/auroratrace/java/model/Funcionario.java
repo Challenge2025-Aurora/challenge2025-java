@@ -6,26 +6,29 @@ import jakarta.validation.constraints.*;
 @Entity
 public class Funcionario {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NotBlank
-    private String nome;
+    @Size(max = 50)
+    private String nomeFunc;
 
-    @NotBlank
-    private String matricula;
+    @Size(max = 100)
+    private String emailFunc;
 
-    @NotBlank
+    @Size(max = 20)
     private String cargo;
 
-    private String telefone;
+    @NotBlank
+    @Size(min = 11, max = 11)
+    @Column(unique = true)
+    private String cpfFunc;
 
     protected Funcionario() {}
 
-    public Funcionario(String nome, String matricula, String cargo, String telefone) {
-        this.nome = nome;
-        this.matricula = matricula;
+    public Funcionario(String nomeFunc, String emailFunc, String cargo, String cpfFunc) {
+        this.nomeFunc = nomeFunc;
+        this.emailFunc = emailFunc;
         this.cargo = cargo;
-        this.telefone = telefone;
+        this.cpfFunc = cpfFunc;
     }
 }
