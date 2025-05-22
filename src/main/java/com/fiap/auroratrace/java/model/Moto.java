@@ -1,14 +1,17 @@
 package com.fiap.auroratrace.java.model;
 
-import com.fiap.auroratrace.java.Enum.StatusMoto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import java.time.LocalDateTime;
-import java.util.regex.Pattern;
+import lombok.*;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Moto {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank
@@ -31,15 +34,4 @@ public class Moto {
     @ManyToOne(optional = false)
     @JoinColumn(name = "patio_id_patio")
     private Patio patio;
-
-    protected Moto() {}
-
-    public Moto(String modelo, String placa, String cor, String status, Localizacao localizacao, Patio patio) {
-        this.modelo = modelo;
-        this.placa = placa;
-        this.cor = cor;
-        this.status = status;
-        this.localizacao = localizacao;
-        this.patio = patio;
-    }
 }

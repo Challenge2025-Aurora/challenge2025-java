@@ -2,10 +2,16 @@ package com.fiap.auroratrace.java.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Funcionario {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank
@@ -22,13 +28,4 @@ public class Funcionario {
     @Size(min = 11, max = 11)
     @Column(unique = true)
     private String cpfFunc;
-
-    protected Funcionario() {}
-
-    public Funcionario(String nomeFunc, String emailFunc, String cargo, String cpfFunc) {
-        this.nomeFunc = nomeFunc;
-        this.emailFunc = emailFunc;
-        this.cargo = cargo;
-        this.cpfFunc = cpfFunc;
-    }
 }

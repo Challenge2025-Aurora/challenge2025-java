@@ -8,10 +8,11 @@ import com.fiap.auroratrace.java.repository.CameraRepository;
 import com.fiap.auroratrace.java.repository.FuncionarioRepository;
 import com.fiap.auroratrace.java.repository.ImagemRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class ImagemService {
@@ -26,8 +27,8 @@ public class ImagemService {
         this.funcionarioRepository = funcionarioRepository;
     }
 
-    public List<Imagem> listar() {
-        return imagemRepository.findAll();
+    public Page<Imagem> listar(Pageable pageable) {
+        return imagemRepository.findAll(pageable);
     }
 
     public Imagem buscarPorId(Integer id) {
@@ -40,7 +41,12 @@ public class ImagemService {
         Funcionario funcionario = funcionarioRepository.findById(dto.getFuncionarioId())
                 .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
 
-        Imagem imagem = new Imagem(dto.getOrigemImg(), new Date(), camera, funcionario);
+        Imagem imagem = Imagem.builder()
+                .origemImg(dto.getOrigemImg())
+                .datahoraImg(new Date())
+                .camera(camera)
+                .funcionario(funcionario)
+                .build();
         return imagemRepository.save(imagem);
     }
 

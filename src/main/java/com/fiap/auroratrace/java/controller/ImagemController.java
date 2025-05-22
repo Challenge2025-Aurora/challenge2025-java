@@ -4,10 +4,13 @@ import com.fiap.auroratrace.java.dto.ImagemDTO;
 import com.fiap.auroratrace.java.model.Imagem;
 import com.fiap.auroratrace.java.service.ImagemService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/imagens")
@@ -20,13 +23,22 @@ public class ImagemController {
     }
 
     @GetMapping
-    public List<Imagem> listar() {
-        return service.listar();
+    public PagedModel<EntityModel<Imagem>> listar(Pageable pageable) {
+        Page<Imagem> page = service.listar(pageable);
+        return PagedModel.of(
+                page.map(i -> EntityModel.of(i,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ImagemController.class).buscar(i.getId())).withSelfRel()
+                )).getContent(),
+                new PagedModel.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements())
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Imagem> buscar(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    public EntityModel<Imagem> buscar(@PathVariable Integer id) {
+        Imagem imagem = service.buscarPorId(id);
+        return EntityModel.of(imagem,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ImagemController.class).buscar(id)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ImagemController.class).listar(Pageable.unpaged())).withRel("todas"));
     }
 
     @PostMapping

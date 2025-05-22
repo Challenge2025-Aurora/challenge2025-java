@@ -4,9 +4,9 @@ import com.fiap.auroratrace.java.dto.MotoDTO;
 import com.fiap.auroratrace.java.model.*;
 import com.fiap.auroratrace.java.repository.*;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MotoService {
@@ -22,8 +22,8 @@ public class MotoService {
         this.localizacaoRepository = localizacaoRepository;
     }
 
-    public List<Moto> listar() {
-        return motoRepository.findAll();
+    public Page<Moto> listar(Pageable pageable) {
+        return motoRepository.findAll(pageable);
     }
 
     public Moto buscarPorId(Integer id) {
@@ -36,7 +36,14 @@ public class MotoService {
         Localizacao localizacao = localizacaoRepository.findById(dto.getLocalizacaoId())
                 .orElseThrow(() -> new EntityNotFoundException("Localização não encontrada"));
 
-        Moto moto = new Moto(dto.getModelo(), dto.getPlaca(), dto.getCor(), dto.getStatus(), localizacao, patio);
+        Moto moto = Moto.builder()
+                .modelo(dto.getModelo())
+                .placa(dto.getPlaca())
+                .cor(dto.getCor())
+                .status(dto.getStatus())
+                .localizacao(localizacao)
+                .patio(patio)
+                .build();
         return motoRepository.save(moto);
     }
 

@@ -4,10 +4,13 @@ import com.fiap.auroratrace.java.dto.CameraDTO;
 import com.fiap.auroratrace.java.model.Camera;
 import com.fiap.auroratrace.java.service.CameraService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/cameras")
@@ -20,13 +23,22 @@ public class CameraController {
     }
 
     @GetMapping
-    public List<Camera> listar() {
-        return service.listar();
+    public PagedModel<EntityModel<Camera>> listar(Pageable pageable) {
+        Page<Camera> page = service.listar(pageable);
+        return PagedModel.of(
+                page.map(camera -> EntityModel.of(camera,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CameraController.class).buscar(camera.getId())).withSelfRel()
+                )).getContent(),
+                new PagedModel.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements())
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Camera> buscar(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    public EntityModel<Camera> buscar(@PathVariable Integer id) {
+        Camera camera = service.buscarPorId(id);
+        return EntityModel.of(camera,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CameraController.class).buscar(id)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CameraController.class).listar(Pageable.unpaged())).withRel("todas"));
     }
 
     @PostMapping

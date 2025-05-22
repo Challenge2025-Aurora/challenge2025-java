@@ -2,10 +2,17 @@ package com.fiap.auroratrace.java.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.*;
+
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Camera {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Size(max = 50)
@@ -22,12 +29,4 @@ public class Camera {
     @JoinColumn(name = "patio_id_patio")
     private Patio patio;
 
-    protected Camera() {}
-
-    public Camera(String nomeCam, String localizacaoCam, String ipCam, Patio patio) {
-        this.nomeCam = nomeCam;
-        this.localizacaoCam = localizacaoCam;
-        this.ipCam = ipCam;
-        this.patio = patio;
-    }
 }

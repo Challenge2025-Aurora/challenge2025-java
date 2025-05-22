@@ -2,11 +2,18 @@ package com.fiap.auroratrace.java.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.*;
+
 import java.util.Date;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Imagem {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Size(max = 15)
@@ -22,13 +29,4 @@ public class Imagem {
     @ManyToOne(optional = false)
     @JoinColumn(name = "funcionario_id_func")
     private Funcionario funcionario;
-
-    protected Imagem() {}
-
-    public Imagem(String origemImg, Date datahoraImg, Camera camera, Funcionario funcionario) {
-        this.origemImg = origemImg;
-        this.datahoraImg = datahoraImg;
-        this.camera = camera;
-        this.funcionario = funcionario;
-    }
 }
