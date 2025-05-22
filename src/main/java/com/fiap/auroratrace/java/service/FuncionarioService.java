@@ -21,16 +21,16 @@ public class FuncionarioService {
         return repository.findAll();
     }
 
-    public Funcionario buscarPorId(Long id) {
+    public Funcionario buscarPorId(Integer id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
     }
 
     public Funcionario criar(FuncionarioDTO dto) {
-        Funcionario funcionario = new Funcionario(dto.getNome(), dto.getMatricula(), dto.getCargo(), dto.getTelefone());
+        Funcionario funcionario = new Funcionario(dto.getNomeFunc(), dto.getEmailFunc(), dto.getCargo(), dto.getCpfFunc());
         return repository.save(funcionario);
     }
 
-    public void deletar(Long id) {
+    public void deletar(Integer id) {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException("Funcionário não encontrado");
         }

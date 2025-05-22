@@ -21,16 +21,16 @@ public class PatioService {
         return repository.findAll();
     }
 
-    public Patio buscarPorId(Long id) {
+    public Patio buscarPorId(Integer id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pátio não encontrado"));
     }
 
     public Patio criar(PatioDTO dto) {
-        Patio patio = new Patio(dto.getNome(), dto.getEndereco(), dto.getCidade(), dto.getTamanhoMetros());
+        Patio patio = new Patio(dto.getNomePatio(), dto.getEndPatio());
         return repository.save(patio);
     }
 
-    public void deletar(Long id) {
+    public void deletar(Integer id) {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException("Pátio não encontrado");
         }

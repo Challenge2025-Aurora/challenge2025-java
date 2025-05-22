@@ -3,20 +3,21 @@ package com.fiap.auroratrace.java.dto;
 import jakarta.validation.constraints.*;
 
 public class ImagemDTO {
-    @NotBlank
-    private String caminhoArquivo;
+    @Size(max = 15)
+    private String origemImg;
 
     @NotNull
-    private Long cameraId;
+    private Integer cameraId;
 
-    private Long motoId;
+    @NotNull
+    private Integer funcionarioId;
 
-    public String getCaminhoArquivo() { return caminhoArquivo; }
-    public void setCaminhoArquivo(String caminhoArquivo) { this.caminhoArquivo = caminhoArquivo; }
+    public String getOrigemImg() { return origemImg; }
+    public void setOrigemImg(String origemImg) { this.origemImg = origemImg; }
 
-    public Long getCameraId() { return cameraId; }
-    public void setCameraId(Long cameraId) { this.cameraId = cameraId; }
+    public Integer getCameraId() { return cameraId; }
+    public void setCameraId(Integer cameraId) { this.cameraId = cameraId; }
 
-    public Long getMotoId() { return motoId; }
-    public void setMotoId(Long motoId) { this.motoId = motoId; }
+    public Integer getFuncionarioId() { return funcionarioId; }
+    public void setFuncionarioId(Integer funcionarioId) { this.funcionarioId = funcionarioId; }
 }

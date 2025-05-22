@@ -14,21 +14,19 @@ public class MotoService {
     private final MotoRepository motoRepository;
     private final PatioRepository patioRepository;
     private final LocalizacaoRepository localizacaoRepository;
-    private final FuncionarioRepository funcionarioRepository;
 
     public MotoService(MotoRepository motoRepository, PatioRepository patioRepository,
-                       LocalizacaoRepository localizacaoRepository, FuncionarioRepository funcionarioRepository) {
+                       LocalizacaoRepository localizacaoRepository) {
         this.motoRepository = motoRepository;
         this.patioRepository = patioRepository;
         this.localizacaoRepository = localizacaoRepository;
-        this.funcionarioRepository = funcionarioRepository;
     }
 
     public List<Moto> listar() {
         return motoRepository.findAll();
     }
 
-    public Moto buscarPorId(Long id) {
+    public Moto buscarPorId(Integer id) {
         return motoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Moto não encontrada"));
     }
 
@@ -37,14 +35,12 @@ public class MotoService {
                 .orElseThrow(() -> new EntityNotFoundException("Pátio não encontrado"));
         Localizacao localizacao = localizacaoRepository.findById(dto.getLocalizacaoId())
                 .orElseThrow(() -> new EntityNotFoundException("Localização não encontrada"));
-        Funcionario funcionario = dto.getFuncionarioId() != null ?
-                funcionarioRepository.findById(dto.getFuncionarioId()).orElse(null) : null;
 
-        Moto moto = new Moto(dto.getPlaca(), dto.getModelo(), dto.getStatus(), patio, localizacao, funcionario);
+        Moto moto = new Moto(dto.getModelo(), dto.getPlaca(), dto.getCor(), dto.getStatus(), localizacao, patio);
         return motoRepository.save(moto);
     }
 
-    public void deletar(Long id) {
+    public void deletar(Integer id) {
         if (!motoRepository.existsById(id)) {
             throw new EntityNotFoundException("Moto não encontrada");
         }

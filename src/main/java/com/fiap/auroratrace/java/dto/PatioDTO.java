@@ -3,27 +3,16 @@ package com.fiap.auroratrace.java.dto;
 import jakarta.validation.constraints.*;
 
 public class PatioDTO {
-    @NotBlank
-    private String nome;
+    @Size(max = 50)
+    private String nomePatio;
 
     @NotBlank
-    private String endereco;
+    @Size(max = 100)
+    private String endPatio;
 
-    @NotBlank
-    private String cidade;
+    public String getNomePatio() { return nomePatio; }
+    public void setNomePatio(String nomePatio) { this.nomePatio = nomePatio; }
 
-    @NotNull
-    private Double tamanhoMetros;
-
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-
-    public String getEndereco() { return endereco; }
-    public void setEndereco(String endereco) { this.endereco = endereco; }
-
-    public String getCidade() { return cidade; }
-    public void setCidade(String cidade) { this.cidade = cidade; }
-
-    public Double getTamanhoMetros() { return tamanhoMetros; }
-    public void setTamanhoMetros(Double tamanhoMetros) { this.tamanhoMetros = tamanhoMetros; }
+    public String getEndPatio() { return endPatio; }
+    public void setEndPatio(String endPatio) { this.endPatio = endPatio; }
 }

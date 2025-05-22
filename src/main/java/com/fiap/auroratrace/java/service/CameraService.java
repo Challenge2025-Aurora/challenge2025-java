@@ -25,18 +25,18 @@ public class CameraService {
         return repository.findAll();
     }
 
-    public Camera buscarPorId(Long id) {
+    public Camera buscarPorId(Integer id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Câmera não encontrada"));
     }
 
     public Camera criar(CameraDTO dto) {
         Patio patio = patioRepository.findById(dto.getPatioId())
                 .orElseThrow(() -> new EntityNotFoundException("Pátio não encontrado"));
-        Camera camera = new Camera(dto.getNome(), dto.getPosicao(), patio);
+        Camera camera = new Camera(dto.getNomeCam(), dto.getLocalizacaoCam(), dto.getIpCam(), patio);
         return repository.save(camera);
     }
 
-    public void deletar(Long id) {
+    public void deletar(Integer id) {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException("Câmera não encontrada");
         }
