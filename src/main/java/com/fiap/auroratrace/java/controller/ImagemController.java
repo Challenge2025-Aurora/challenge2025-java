@@ -3,6 +3,7 @@ package com.fiap.auroratrace.java.controller;
 import com.fiap.auroratrace.java.dto.ImagemDTO;
 import com.fiap.auroratrace.java.model.Imagem;
 import com.fiap.auroratrace.java.service.ImagemService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class ImagemController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todas as imagens")
     public PagedModel<EntityModel<Imagem>> listar(Pageable pageable) {
         Page<Imagem> page = service.listar(pageable);
         return PagedModel.of(
@@ -34,6 +36,7 @@ public class ImagemController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar imagem por ID")
     public EntityModel<Imagem> buscar(@PathVariable Integer id) {
         Imagem imagem = service.buscarPorId(id);
         return EntityModel.of(imagem,
@@ -42,11 +45,13 @@ public class ImagemController {
     }
 
     @PostMapping
+    @Operation(summary = "Cadastrar nova imagem")
     public ResponseEntity<Imagem> criar(@RequestBody @Valid ImagemDTO dto) {
         return ResponseEntity.ok(service.criar(dto));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar imagem por ID")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();

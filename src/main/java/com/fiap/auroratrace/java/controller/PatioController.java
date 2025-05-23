@@ -3,6 +3,7 @@ package com.fiap.auroratrace.java.controller;
 import com.fiap.auroratrace.java.dto.PatioDTO;
 import com.fiap.auroratrace.java.model.Patio;
 import com.fiap.auroratrace.java.service.PatioService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class PatioController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todos os pátios")
     public PagedModel<EntityModel<Patio>> listar(Pageable pageable) {
         Page<Patio> page = service.listar(pageable);
         return PagedModel.of(
@@ -34,6 +36,7 @@ public class PatioController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar pátio por ID")
     public EntityModel<Patio> buscar(@PathVariable Integer id) {
         Patio patio = service.buscarPorId(id);
         return EntityModel.of(patio,
@@ -42,11 +45,13 @@ public class PatioController {
     }
 
     @PostMapping
+    @Operation(summary = "Cadastrar novo pátio")
     public ResponseEntity<Patio> criar(@RequestBody @Valid PatioDTO dto) {
         return ResponseEntity.ok(service.criar(dto));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar pátio por ID")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();

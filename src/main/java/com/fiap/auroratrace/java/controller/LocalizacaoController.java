@@ -3,6 +3,7 @@ package com.fiap.auroratrace.java.controller;
 import com.fiap.auroratrace.java.dto.LocalizacaoDTO;
 import com.fiap.auroratrace.java.model.Localizacao;
 import com.fiap.auroratrace.java.service.LocalizacaoService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class LocalizacaoController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todas as localizações")
     public PagedModel<EntityModel<Localizacao>> listar(Pageable pageable) {
         Page<Localizacao> page = service.listar(pageable);
         return PagedModel.of(
@@ -34,6 +36,7 @@ public class LocalizacaoController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar localização por ID")
     public EntityModel<Localizacao> buscar(@PathVariable Integer id) {
         Localizacao l = service.buscarPorId(id);
         return EntityModel.of(l,
@@ -42,11 +45,13 @@ public class LocalizacaoController {
     }
 
     @PostMapping
+    @Operation(summary = "Cadastrar nova localização")
     public ResponseEntity<Localizacao> criar(@RequestBody @Valid LocalizacaoDTO dto) {
         return ResponseEntity.ok(service.criar(dto));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar localização por ID")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
