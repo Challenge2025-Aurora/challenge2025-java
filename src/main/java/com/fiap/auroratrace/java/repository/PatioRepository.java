@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PatioRepository extends JpaRepository<Patio, Integer> {
-    Patio findByNomePatio(String nomePatio);
+
+    Patio findByNome(String nomePatio);
 }

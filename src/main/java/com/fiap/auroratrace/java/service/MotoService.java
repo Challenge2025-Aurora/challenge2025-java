@@ -1,56 +1,98 @@
 package com.fiap.auroratrace.java.service;
 
 import com.fiap.auroratrace.java.dto.MotoDTO;
-import com.fiap.auroratrace.java.model.*;
-import com.fiap.auroratrace.java.repository.*;
-import jakarta.persistence.EntityNotFoundException;
+import com.fiap.auroratrace.java.model.Moto;
+import com.fiap.auroratrace.java.repository.MotoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class MotoService {
 
     private final MotoRepository motoRepository;
-    private final PatioRepository patioRepository;
-    private final LocalizacaoRepository localizacaoRepository;
 
-    public MotoService(MotoRepository motoRepository, PatioRepository patioRepository,
-                       LocalizacaoRepository localizacaoRepository) {
+    @Autowired
+    public MotoService(MotoRepository motoRepository) {
         this.motoRepository = motoRepository;
-        this.patioRepository = patioRepository;
-        this.localizacaoRepository = localizacaoRepository;
     }
 
-    public Page<Moto> listar(Pageable pageable) {
-        return motoRepository.findAll(pageable);
+    private MotoDTO toDTO(Moto moto) {
+        MotoDTO dto = new MotoDTO();
+        dto.setPlaca(moto.getPlaca());
+        dto.setModelo(moto.getModelo());
+        dto.setStatus(moto.getStatus());
+        dto.setUltimoSetor(moto.getUltimoSetor());
+        dto.setUltimoSlot(moto.getUltimoSlot());
+        return dto;
     }
 
-    public Moto buscarPorId(Integer id) {
-        return motoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Moto não encontrada"));
-    }
-
-    public Moto criar(MotoDTO dto) {
-        Patio patio = patioRepository.findById(dto.getPatioId())
-                .orElseThrow(() -> new EntityNotFoundException("Pátio não encontrado"));
-        Localizacao localizacao = localizacaoRepository.findById(dto.getLocalizacaoId())
-                .orElseThrow(() -> new EntityNotFoundException("Localização não encontrada"));
-
-        Moto moto = Moto.builder()
-                .modelo(dto.getModelo())
+    private Moto toEntity(MotoDTO dto) {
+        return Moto.builder()
                 .placa(dto.getPlaca())
-                .cor(dto.getCor())
+                .modelo(dto.getModelo())
                 .status(dto.getStatus())
-                .localizacao(localizacao)
-                .patio(patio)
+                .ultimoSetor(dto.getUltimoSetor())
+                .ultimoSlot(dto.getUltimoSlot())
                 .build();
-        return motoRepository.save(moto);
     }
 
-    public void deletar(Integer id) {
-        if (!motoRepository.existsById(id)) {
-            throw new EntityNotFoundException("Moto não encontrada");
+    public Page<MotoDTO> listarTodas(Pageable pageable) {
+        return motoRepository.findAll(pageable)
+                .map(this::toDTO);
+    }
+
+    public MotoDTO buscarPorId(Long id) {
+        Moto moto = motoRepository.findById(id.intValue())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada com ID: " + id));
+        return toDTO(moto);
+    }
+
+    public MotoDTO criar(MotoDTO motoDTO) {
+        Moto novaMoto = toEntity(motoDTO);
+        Moto motoSalva = motoRepository.save(novaMoto);
+        return toDTO(motoSalva);
+    }
+
+    public MotoDTO atualizar(Long id, MotoDTO motoDTO) {
+        Moto motoExistente = motoRepository.findById(id.intValue())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada com ID: " + id));
+
+        motoExistente.setPlaca(motoDTO.getPlaca().toUpperCase());
+        motoExistente.setModelo(motoDTO.getModelo());
+
+        if (!motoExistente.getStatus().equals(motoDTO.getStatus()) ||
+                !motoExistente.getUltimoSetor().equals(motoDTO.getUltimoSetor()) ||
+                !motoExistente.getUltimoSlot().equals(motoDTO.getUltimoSlot())) {
+
+            motoExistente.atualizarStatus(
+                    motoDTO.getStatus(),
+                    motoDTO.getUltimoSetor(),
+                    motoDTO.getUltimoSlot()
+            );
         }
-        motoRepository.deleteById(id);
+
+        Moto motoAtualizada = motoRepository.save(motoExistente);
+        return toDTO(motoAtualizada);
+    }
+
+    public void deletar(Long id) {
+        if (!motoRepository.existsById(id.intValue())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada com ID: " + id);
+        }
+        motoRepository.deleteById(id.intValue());
+    }
+
+    public Page<MotoDTO> buscarPorStatus(String status, Pageable pageable) {
+        return motoRepository.findByStatus(status, pageable)
+                .map(this::toDTO);
+    }
+
+    public Page<MotoDTO> buscarPorPlaca(String placa, Pageable pageable) {
+        return motoRepository.findByPlacaContainingIgnoreCase(placa, pageable)
+                .map(this::toDTO);
     }
 }

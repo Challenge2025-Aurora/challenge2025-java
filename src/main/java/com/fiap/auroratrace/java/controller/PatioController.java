@@ -1,59 +1,92 @@
 package com.fiap.auroratrace.java.controller;
 
 import com.fiap.auroratrace.java.dto.PatioDTO;
-import com.fiap.auroratrace.java.model.Patio;
 import com.fiap.auroratrace.java.service.PatioService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
-@RequestMapping("/patios")
+@RequestMapping("/api/patios")
+@Tag(name = "Pátios", description = "Gerenciamento de pátios e suas dimensões")
 public class PatioController {
 
-    private final PatioService service;
+    private final PatioService patioService;
+    private final PagedResourcesAssembler<PatioDTO> pagedResourcesAssembler;
 
-    public PatioController(PatioService service) {
-        this.service = service;
+    @Autowired
+    public PatioController(PatioService patioService, PagedResourcesAssembler<PatioDTO> pagedResourcesAssembler) {
+        this.patioService = patioService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
+    @Operation(summary = "Lista todos os pátios com paginação")
     @GetMapping
-    @Operation(summary = "Listar todos os pátios")
-    public PagedModel<EntityModel<Patio>> listar(Pageable pageable) {
-        Page<Patio> page = service.listar(pageable);
-        return PagedModel.of(
-                page.map(p -> EntityModel.of(p,
-                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatioController.class).buscar(p.getId())).withSelfRel()
-                )).getContent(),
-                new PagedModel.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements())
+    public PagedModel<EntityModel<PatioDTO>> listarTodos(Pageable pageable) {
+        Page<PatioDTO> patios = patioService.listarTodos(pageable);
+        return pagedResourcesAssembler.toModel(patios, patio -> {
+            EntityModel<PatioDTO> resource = EntityModel.of(patio);
+            resource.add(linkTo(methodOn(PatioController.class).buscarPorId(patio.getId())).withSelfRel());
+            return resource;
+        });
+    }
+
+    @Operation(summary = "Busca um pátio pelo ID")
+    @GetMapping("/{id}")
+    public EntityModel<PatioDTO> buscarPorId(@PathVariable Integer id) {
+        PatioDTO patio = patioService.buscarPorId(id);
+        EntityModel<PatioDTO> resource = EntityModel.of(patio);
+        resource.add(linkTo(methodOn(PatioController.class).buscarPorId(id)).withSelfRel());
+        resource.add(linkTo(methodOn(PatioController.class).listarTodos(Pageable.unpaged())).withRel("todos"));
+        return resource;
+    }
+
+    @Operation(summary = "Cria um novo pátio")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public EntityModel<PatioDTO> criar(@RequestBody @Valid PatioDTO patioDTO) {
+        PatioDTO novoPatio = patioService.criar(patioDTO);
+        return EntityModel.of(novoPatio,
+                linkTo(methodOn(PatioController.class).buscarPorId(novoPatio.getId())).withSelfRel(),
+                linkTo(methodOn(PatioController.class).listarTodos(Pageable.unpaged())).withRel("todos")
         );
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Buscar pátio por ID")
-    public EntityModel<Patio> buscar(@PathVariable Integer id) {
-        Patio patio = service.buscarPorId(id);
-        return EntityModel.of(patio,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatioController.class).buscar(id)).withSelfRel(),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatioController.class).listar(Pageable.unpaged())).withRel("todos"));
+    @Operation(summary = "Atualiza um pátio existente")
+    @PutMapping("/{id}")
+    public EntityModel<PatioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid PatioDTO patioDTO) {
+        PatioDTO patioAtualizado = patioService.atualizar(id, patioDTO);
+        return EntityModel.of(patioAtualizado,
+                linkTo(methodOn(PatioController.class).buscarPorId(id)).withSelfRel(),
+                linkTo(methodOn(PatioController.class).listarTodos(Pageable.unpaged())).withRel("todos")
+        );
     }
 
-    @PostMapping
-    @Operation(summary = "Cadastrar novo pátio")
-    public ResponseEntity<Patio> criar(@RequestBody @Valid PatioDTO dto) {
-        return ResponseEntity.ok(service.criar(dto));
-    }
-
+    @Operation(summary = "Deleta um pátio pelo ID")
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar pátio por ID")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        service.deletar(id);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletar(@PathVariable Integer id) {
+        patioService.deletar(id);
+    }
+
+    @Operation(summary = "Busca um pátio pelo nome")
+    @GetMapping("/nome/{nome}")
+    public EntityModel<PatioDTO> buscarPorNome(@PathVariable String nome) {
+        PatioDTO patio = patioService.buscarPorNome(nome);
+        return EntityModel.of(patio,
+                linkTo(methodOn(PatioController.class).buscarPorNome(nome)).withSelfRel(),
+                linkTo(methodOn(PatioController.class).listarTodos(Pageable.unpaged())).withRel("todos")
+        );
     }
 }

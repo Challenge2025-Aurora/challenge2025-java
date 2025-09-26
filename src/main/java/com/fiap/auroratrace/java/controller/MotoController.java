@@ -1,59 +1,93 @@
 package com.fiap.auroratrace.java.controller;
 
 import com.fiap.auroratrace.java.dto.MotoDTO;
-import com.fiap.auroratrace.java.model.Moto;
 import com.fiap.auroratrace.java.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
-@RequestMapping("/motos")
+@RequestMapping("/api/motos")
+@Tag(name = "Motos", description = "Gerenciamento de Motos e Status de Localização")
 public class MotoController {
 
-    private final MotoService service;
+    private final MotoService motoService;
+    private final PagedResourcesAssembler<MotoDTO> pagedResourcesAssembler;
 
-    public MotoController(MotoService service) {
-        this.service = service;
+    @Autowired
+    public MotoController(MotoService motoService, PagedResourcesAssembler<MotoDTO> pagedResourcesAssembler) {
+        this.motoService = motoService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
+    @Operation(summary = "Lista todas as motos com paginação")
     @GetMapping
-    @Operation(summary = "Listar todas as motos")
-    public PagedModel<EntityModel<Moto>> listar(Pageable pageable) {
-        Page<Moto> page = service.listar(pageable);
-        return PagedModel.of(
-                page.map(m -> EntityModel.of(m,
-                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MotoController.class).buscar(m.getId())).withSelfRel()
-                )).getContent(),
-                new PagedModel.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements())
+    public PagedModel<EntityModel<MotoDTO>> listarTodas(Pageable pageable) {
+        Page<MotoDTO> motos = motoService.listarTodas(pageable);
+        return pagedResourcesAssembler.toModel(motos, moto -> {
+            EntityModel<MotoDTO> resource = EntityModel.of(moto);
+            resource.add(linkTo(methodOn(MotoController.class).buscarPorId(moto.getId())).withSelfRel());
+            return resource;
+        });
+    }
+
+    @Operation(summary = "Busca uma moto pelo ID")
+    @GetMapping("/{id}")
+    public EntityModel<MotoDTO> buscarPorId(@PathVariable Long id) {
+        MotoDTO moto = motoService.buscarPorId(id);
+        EntityModel<MotoDTO> resource = EntityModel.of(moto);
+        resource.add(linkTo(methodOn(MotoController.class).buscarPorId(id)).withSelfRel());
+        resource.add(linkTo(methodOn(MotoController.class).listarTodas(Pageable.unpaged())).withRel("todas"));
+        return resource;
+    }
+
+    @Operation(summary = "Cria uma nova moto")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public EntityModel<MotoDTO> criar(@RequestBody @Valid MotoDTO motoDTO) {
+        MotoDTO novaMoto = motoService.criar(motoDTO);
+        return EntityModel.of(novaMoto,
+                linkTo(methodOn(MotoController.class).buscarPorId(novaMoto.getId())).withSelfRel(),
+                linkTo(methodOn(MotoController.class).listarTodas(Pageable.unpaged())).withRel("todas")
         );
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Buscar moto por ID")
-    public EntityModel<Moto> buscar(@PathVariable Integer id) {
-        Moto moto = service.buscarPorId(id);
-        return EntityModel.of(moto,
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MotoController.class).buscar(id)).withSelfRel(),
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MotoController.class).listar(Pageable.unpaged())).withRel("todas"));
+    @Operation(summary = "Atualiza uma moto existente")
+    @PutMapping("/{id}")
+    public EntityModel<MotoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid MotoDTO motoDTO) {
+        MotoDTO motoAtualizada = motoService.atualizar(id, motoDTO);
+        return EntityModel.of(motoAtualizada,
+                linkTo(methodOn(MotoController.class).buscarPorId(id)).withSelfRel(),
+                linkTo(methodOn(MotoController.class).listarTodas(Pageable.unpaged())).withRel("todas")
+        );
     }
 
-    @PostMapping
-    @Operation(summary = "Cadastrar nova moto")
-    public ResponseEntity<Moto> criar(@RequestBody @Valid MotoDTO dto) {
-        return ResponseEntity.ok(service.criar(dto));
-    }
-
+    @Operation(summary = "Deleta uma moto pelo ID")
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar moto por ID")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        service.deletar(id);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletar(@PathVariable Long id) {
+        motoService.deletar(id);
+    }
+
+    @Operation(summary = "Busca motos pelo status")
+    @GetMapping("/status/{status}")
+    public PagedModel<EntityModel<MotoDTO>> buscarPorStatus(@PathVariable String status, Pageable pageable) {
+        Page<MotoDTO> motos = motoService.buscarPorStatus(status, pageable);
+        return pagedResourcesAssembler.toModel(motos, moto -> {
+            EntityModel<MotoDTO> resource = EntityModel.of(moto);
+            resource.add(linkTo(methodOn(MotoController.class).buscarPorId(moto.getId())).withSelfRel());
+            return resource;
+        });
     }
 }

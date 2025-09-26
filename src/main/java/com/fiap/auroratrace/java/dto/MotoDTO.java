@@ -1,27 +1,30 @@
 package com.fiap.auroratrace.java.dto;
 
+import com.fiap.auroratrace.java.Enum.StatusMoto;
 import jakarta.validation.constraints.*;
 
 public class MotoDTO {
     @NotBlank
-    @Size(max = 15)
+    @Size(max = 10)
     private String placa;
 
     @NotBlank
     @Size(max = 50)
     private String modelo;
 
-    @Size(max = 20)
-    private String cor;
-
-    @Size(max = 20)
-    private String status;
-
     @NotNull
-    private Integer patioId;
+    private StatusMoto status;
 
-    @NotNull
-    private Integer localizacaoId;
+    @Size(max = 50)
+    private String ultimoSetor;
+
+    @Size(max = 10)
+    private String ultimoSlot;
+
+    private Long id;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getPlaca() { return placa; }
     public void setPlaca(String placa) { this.placa = placa; }
@@ -29,15 +32,12 @@ public class MotoDTO {
     public String getModelo() { return modelo; }
     public void setModelo(String modelo) { this.modelo = modelo; }
 
-    public String getCor() { return cor; }
-    public void setCor(String cor) { this.cor = cor; }
+    public StatusMoto getStatus() { return status; }
+    public void setStatus(StatusMoto status) { this.status = status; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getUltimoSetor() { return ultimoSetor; }
+    public void setUltimoSetor(String ultimoSetor) { this.ultimoSetor = ultimoSetor; }
 
-    public Integer getPatioId() { return patioId; }
-    public void setPatioId(Integer patioId) { this.patioId = patioId; }
-
-    public Integer getLocalizacaoId() { return localizacaoId; }
-    public void setLocalizacaoId(Integer localizacaoId) { this.localizacaoId = localizacaoId; }
+    public String getUltimoSlot() { return ultimoSlot; }
+    public void setUltimoSlot(String ultimoSlot) { this.ultimoSlot = ultimoSlot; }
 }
