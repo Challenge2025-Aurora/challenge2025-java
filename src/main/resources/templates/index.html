@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: config(~{::title})">
+    <title>Dashboard Principal</title>
+</head>
+<body>
+
+<header th:replace="fragments/menu"></header>
+
+<main>
+    <h1>Bem-vindo à AuroraTrace</h1>
+    <p>Utilize o menu acima para navegar sentre o gerenciamento de motos, eventos e detecções.</p>
+    <a th:href="@{/motos}" class="btn-primary">Ver Motos Cadastradas</a>
+</main>
+
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

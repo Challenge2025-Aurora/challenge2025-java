@@ -1,0 +1,13 @@
+<header th:fragment="menu" xmlns:th="http://www.thymeleaf.org" class="header">
+    <div class="logo">
+        <a th:href="@{/}">Aurora<span>Trace</span></a>
+    </div>
+    <nav class="nav-menu">
+        <ul>
+            <li><a th:href="@{/}" class="active">Início</a></li>
+            <li><a th:href="@{/motos}">Motos</a></li>
+            <li><a th:href="@{/eventos}">Eventos</a></li>
+            <li><a th:href="@{/deteccoes}">Detecções</a></li>
+        </ul>
+    </nav>
+</header>
