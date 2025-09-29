@@ -39,8 +39,8 @@ main {
     justify-content: center;
     align-items: center;
     text-align: center;
+    flex-grow: 1;
     padding: 2rem;
-    max-width: 800px;
 }
 
 .main-centralizado h1 {
@@ -138,8 +138,15 @@ h1 {
 
 .btn-link {
     color: var(--color-primary);
-    text-decoration: underline;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: 1px solid var(--color-primary);
+    border-radius: 6px;
+    font-weight: 500;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 table {
@@ -170,6 +177,9 @@ tr {
 
 .main-form {
     max-width: 600px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .form-container {
@@ -190,6 +200,7 @@ tr {
 
 .form-container input[type="text"],
 .form-container input[type="number"],
+.form-container input[type="password"],
 .form-container select {
     padding: 0.75rem;
     border-radius: 6px;
@@ -216,6 +227,30 @@ tr {
     font-weight: 600;
 }
 
+.alert-error {
+    background-color: #e53e3e;
+    color: var(--color-text-on-primary);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+}
+
 .form-container > div {
     display: inherit;
+}
+
+.error-403-container h1 {
+    color: var(--color-accent);
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.error-403-container .lead-text {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--color-primary);
 }
