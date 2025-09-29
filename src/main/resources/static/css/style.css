@@ -164,10 +164,9 @@ th {
     font-weight: 600;
 }
 
-tr:hover {
+tr {
     background-color: var(--color-bg);
 }
-
 
 .main-form {
     max-width: 600px;

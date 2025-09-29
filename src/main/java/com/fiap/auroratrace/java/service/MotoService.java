@@ -27,6 +27,8 @@ public class MotoService {
         dto.setStatus(moto.getStatus());
         dto.setUltimoSetor(moto.getUltimoSetor());
         dto.setUltimoSlot(moto.getUltimoSlot());
+        dto.setAtualizadoEm(moto.getAtualizadoEm());
+        dto.setId(moto.getId());
         return dto;
     }
 
@@ -57,6 +59,7 @@ public class MotoService {
         return toDTO(motoSalva);
     }
 
+    // ...
     public MotoDTO atualizar(Long id, MotoDTO motoDTO) {
         Moto motoExistente = motoRepository.findById(id.intValue())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada com ID: " + id));
@@ -64,16 +67,11 @@ public class MotoService {
         motoExistente.setPlaca(motoDTO.getPlaca().toUpperCase());
         motoExistente.setModelo(motoDTO.getModelo());
 
-        if (!motoExistente.getStatus().equals(motoDTO.getStatus()) ||
-                !motoExistente.getUltimoSetor().equals(motoDTO.getUltimoSetor()) ||
-                !motoExistente.getUltimoSlot().equals(motoDTO.getUltimoSlot())) {
-
-            motoExistente.atualizarStatus(
-                    motoDTO.getStatus(),
-                    motoDTO.getUltimoSetor(),
-                    motoDTO.getUltimoSlot()
-            );
-        }
+        motoExistente.atualizarStatus(
+                motoDTO.getStatus(),
+                motoDTO.getUltimoSetor(),
+                motoDTO.getUltimoSlot()
+        );
 
         Moto motoAtualizada = motoRepository.save(motoExistente);
         return toDTO(motoAtualizada);

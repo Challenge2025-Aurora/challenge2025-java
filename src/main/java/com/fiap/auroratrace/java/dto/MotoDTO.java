@@ -3,6 +3,8 @@ package com.fiap.auroratrace.java.dto;
 import com.fiap.auroratrace.java.Enum.StatusMoto;
 import jakarta.validation.constraints.*;
 
+import java.time.LocalDateTime;
+
 public class MotoDTO {
     @NotBlank
     @Size(max = 10)
@@ -23,6 +25,8 @@ public class MotoDTO {
 
     private Long id;
 
+    private LocalDateTime atualizadoEm;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -40,4 +44,7 @@ public class MotoDTO {
 
     public String getUltimoSlot() { return ultimoSlot; }
     public void setUltimoSlot(String ultimoSlot) { this.ultimoSlot = ultimoSlot; }
+
+    public LocalDateTime getAtualizadoEm() { return atualizadoEm; }
+    public void setAtualizadoEm(LocalDateTime atualizadoEm) { this.atualizadoEm = atualizadoEm; }
 }
