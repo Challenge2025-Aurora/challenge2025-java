@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: config(~{::title})">
+    <title>Acesso Negado (403) | AuroraTrace</title>
+</head>
+<body>
+
+<header th:replace="fragments/menu"></header>
+
+<main class="main-centralizado error-403-container">
+
+    <h1>Acesso Negado</h1>
+
+    <p class="lead-text">
+        Parece que você não tem permissão pra isso :(
+    </p>
+
+    <a th:href="@{/}" class="btn-primary">
+        Voltar
+    </a>
+
+    <form th:action="@{/logout}" method="post" style="margin-top: 1rem;">
+        <button type="submit" class="btn-link">
+            Trocar de Usuário
+        </button>
+    </form>
+
+</main>
+
+<footer th:replace="fragments/footer :: rodape"></footer>
+
+</body>
+</html>
