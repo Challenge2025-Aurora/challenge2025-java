@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: config(~{::title})">
+    <title>Histórico de Detecções | AuroraTrace</title>
+</head>
+<body>
+
+<header th:replace="fragments/menu"></header>
+
+<main>
+    <h1>Histórico de Detecções (Visão Computacional)</h1>
+    <p style="margin-bottom: 2rem;">Registros brutos gerados pelo sistema de detecção, ordenados do mais recente para o mais antigo.</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Placa Detectada</th>
+            <th>Modelo Estimado</th>
+            <th>Confiança (%)</th>
+            <th>Local Estimado</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="d : ${deteccoes}">
+            <td th:text="${#temporals.format(d.timestamp, 'dd/MM HH:mm:ss')}">29/09 01:00:00</td>
+            <td th:text="${d.placa ?: 'NÃO IDENTIFICADA'}">ABC-1234</td>
+            <td th:text="${d.modeloProb ?: '-'}">Honda CBR</td>
+            <td th:text="${#numbers.formatDecimal(d.confianca * 100, 1, 'POINT', 2, 'COMMA') + '%'}">98.50%</td>
+            <td th:text="${d.setorEstimado + '/' + d.slotEstimado}">A1/05</td>
+            <td>
+                <a th:href="@{/deteccoes/{id}(id=${d.id})}" class="btn-link">Ver Detalhes</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${deteccoes.isEmpty()}" style="text-align: center; margin-top: 2rem;">
+        <p>Nenhuma detecção registrada ainda.</p>
+    </div>
+
+    <div th:if="${page.totalPages > 1}" class="pagination" style="margin-top: 2rem; text-align: center;">
+        <a th:if="${page.number > 0}" th:href="@{/deteccoes(page=${page.number - 1}, size=${page.size}, sort=${#strings.arrayJoin(page.sort.toString().split(':'), ',')})}" class="btn-link">Anterior</a>
+        <span th:text="${'Página ' + (page.number + 1) + ' de ' + page.totalPages}" style="margin: 0 15px;"></span>
+        <a th:if="${page.number + 1 < page.totalPages}" th:href="@{/deteccoes(page=${page.number + 1}, size=${page.size}, sort=${#strings.arrayJoin(page.sort.toString().split(':'), ',')})}" class="btn-link">Próxima</a>
+    </div>
+</main>
+
+<footer th:replace="fragments/footer :: rodape"></footer>
+</body>
+</html>

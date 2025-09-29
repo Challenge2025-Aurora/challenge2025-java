@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: config(~{::title})">
+    <title>Registrar Novo Evento | AuroraTrace</title>
+</head>
+<body>
+
+<header th:replace="fragments/menu"></header>
+
+<main class="main-form">
+
+    <h1>Registrar Novo Evento</h1>
+    <p style="text-align: center;">Um evento registra uma ação ou mudança de estado da moto no sistema.</p>
+
+    <form th:action="@{/eventos/novo}"
+          th:object="${eventoDTO}"
+          method="post"
+          class="form-container">
+
+        <label for="motoId">Moto Relacionada:</label>
+        <select id="motoId" th:field="*{motoId}" required>
+            <option value="">-- Selecione a Moto --</option>
+            <option th:each="moto : ${motos}"
+                    th:value="${moto.id}"
+                    th:text="${moto.placa + ' (' + moto.modelo + ')'}">ABC-1234 (Modelo X)</option>
+        </select>
+
+        <label for="tipo">Tipo do Evento:</label>
+        <input type="text" id="tipo" th:field="*{tipo}" placeholder="Ex: Entrada, Saída, Manutenção, Alerta" required>
+
+        <label for="descricao">Descrição (Opcional):</label>
+        <textarea id="descricao" th:field="*{descricao}" rows="3" placeholder="Detalhes sobre o que aconteceu..."></textarea>
+
+        <button type="submit" class="btn-primary" style="margin-top: 1rem;">
+            Registrar Evento
+        </button>
+        <a th:href="@{/eventos}" class="btn-link" style="text-align: center; margin-top: 10px;">Voltar para Lista</a>
+
+    </form>
+</main>
+
+<footer th:replace="fragments/footer :: rodape"></footer>
+
+</body>
+</html>

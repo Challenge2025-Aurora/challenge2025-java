@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: config(~{::title})">
+    <title th:text="'Detecção #' + ${deteccao.id} + ' | AuroraTrace'"></title>
+</head>
+<body>
+
+<header th:replace="fragments/menu"></header>
+
+<main class="main-form">
+
+    <h1 th:text="'Detalhes da Detecção #' + ${deteccao.id}">Detalhes da Detecção</h1>
+    <p style="text-align: center; margin-bottom: 2rem;">Dados brutos capturados pelo sistema em <strong th:text="${#temporals.format(deteccao.timestamp, 'dd/MM/yyyy à HH:mm:ss')}"></strong>.</p>
+
+    <div class="form-container">
+
+        <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-primary);">Informações Identificadas</h2>
+
+        <label>Placa Detectada:</label>
+        <input type="text" th:value="${deteccao.placa ?: 'NÃO IDENTIFICADA'}" disabled class="input-disabled">
+
+        <label>Modelo (Probabilidade):</label>
+        <input type="text" th:value="${deteccao.modeloProb ?: 'N/A'}" disabled class="input-disabled">
+
+        <label>Nível de Confiança:</label>
+        <input type="text" th:value="${#numbers.formatDecimal(deteccao.confianca * 100, 1, 'POINT', 2, 'COMMA') + '%'}" disabled class="input-disabled">
+
+        <hr style="border-color: var(--color-border); margin: 1.5rem 0;">
+
+        <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-primary);">Localização Estimada</h2>
+
+        <label>Setor/Slot Estimado:</label>
+        <input type="text" th:value="${deteccao.setorEstimado + '/' + deteccao.slotEstimado}" disabled class="input-disabled">
+
+        <hr style="border-color: var(--color-border); margin: 1.5rem 0;">
+
+        <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-primary);">Dados da Caixa Delimitadora (BBox)</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+            <div>
+                <label>BBox X (Início):</label>
+                <input type="text" th:value="${deteccao.bboxX}" disabled class="input-disabled">
+            </div>
+            <div>
+                <label>BBox Y (Início):</label>
+                <input type="text" th:value="${deteccao.bboxY}" disabled class="input-disabled">
+            </div>
+            <div>
+                <label>BBox Largura (W):</label>
+                <input type="text" th:value="${deteccao.bboxW}" disabled class="input-disabled">
+            </div>
+            <div>
+                <label>BBox Altura (H):</label>
+                <input type="text" th:value="${deteccao.bboxH}" disabled class="input-disabled">
+            </div>
+        </div>
+
+        <a th:href="@{/deteccoes}" class="btn-primary" style="text-align: center; margin-top: 1.5rem;">Voltar para Histórico</a>
+
+    </div>
+</main>
+
+<footer th:replace="fragments/footer :: rodape"></footer>
+
+</body>
+</html>

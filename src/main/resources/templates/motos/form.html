@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: config(~{::title})">
+    <title th:text="${motoDTO.id == null ? 'Cadastrar Nova Moto' : 'Editar Moto'} + ' | AuroraTrace'"></title>
+</head>
+<body>
+
+<header th:replace="fragments/menu"></header>
+
+<main class="main-form">
+    <form th:action="${motoDTO.id == null} ? @{/motos/nova} : @{/motos/{id}/editar(id=${motoDTO.id})}"
+          th:object="${motoDTO}"
+          method="post"
+          class="form-container">
+
+        <label for="placa">Placa:</label>
+        <input type="text" id="placa" th:field="*{placa}" required maxlength="7">
+
+        <label for="modelo">Modelo:</label>
+        <input type="text" id="modelo" th:field="*{modelo}" required>
+
+        <label for="status">Status Atual:</label>
+        <select id="status" th:field="*{status}" required>
+            <option th:each="status : ${T(com.fiap.auroratrace.java.Enum.StatusMoto).values()}"
+                    th:value="${status}"
+                    th:text="${status.name()}">DISPONIVEL</option>
+        </select>
+
+        <label for="ultimoSetor">Último Setor (Ex: A, B, C):</label>
+        <input type="text" id="ultimoSetor" th:field="*{ultimoSetor}" placeholder="Ex: A1" maxlength="10">
+
+        <label for="ultimoSlot">Último Slot (Ex: 01, 15):</label>
+        <input type="text" id="ultimoSlot" th:field="*{ultimoSlot}" placeholder="Ex: 05" maxlength="10">
+
+        <button type="submit" class="btn-primary" th:text="${motoDTO.id == null ? 'Cadastrar Moto' : 'Salvar Alterações'}">Cadastrar</button>
+        <a th:href="@{/motos}" class="btn-link" style="margin-left: 15px;">Voltar para Lista</a>
+
+    </form>
+</main>
+
+<footer th:replace="fragments/footer :: rodape"></footer>
+
+</body>
+</html>

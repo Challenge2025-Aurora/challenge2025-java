@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: config(~{::title})">
+    <title>Lista de Motos | AuroraTrace</title>
+</head>
+<body>
+
+<header th:replace="fragments/menu"></header>
+
+<main>
+    <div th:if="${mensagem}" class="alert-success">
+        <p th:text="${mensagem}">Moto excluída com sucesso!</p>
+    </div>
+
+    <h1>Gerenciamento de Motos</h1>
+
+    <a th:href="@{/motos/nova}" class="btn-primary" style="margin-bottom: 1.5rem;">
+        <i class="fa-solid fa-plus"></i> Cadastrar Nova Moto
+    </a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Placa</th> <th>Modelo</th>
+            <th>Status</th>
+            <th>Setor/Slot</th> <th>Atualizado Em</th> <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="moto : ${motos}">
+            <td th:text="${moto.id}">1</td>
+            <td th:text="${moto.placa}">ABC-1234</td>
+            <td th:text="${moto.modelo}">CBR 1000RR</td>
+            <td th:text="${moto.status}">ATIVO</td>
+            <td><span th:text="${moto.ultimoSetor ?: '-'}">A1</span> / <span th:text="${moto.ultimoSlot ?: '-'}">05</span></td>
+            <td th:text="${#temporals.format(moto.atualizadoEm, 'dd/MM HH:mm')}">29/09 10:30</td>
+            <td>
+                <a th:href="@{/motos/{id}/editar(id=${moto.id})}" class="btn-link">Editar</a>
+                <form th:action="@{/motos/{id}/deletar(id=${moto.id})}" method="post" style="display: inline; margin-left: 10px;">
+                    <button type="submit" class="btn-link" style="color: #ff6b6b; border: none; background: none; cursor: pointer;">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${motos.isEmpty()}" style="text-align: center; margin-top: 2rem;">
+        <p>Nenhuma moto cadastrada ainda. Use o botão acima para adicionar.</p>
+    </div>
+
+    <div th:if="${page.totalPages > 1}" class="pagination" style="margin-top: 2rem; text-align: center;">
+        <a th:if="${page.number > 0}" th:href="@{/motos(page=${page.number - 1}, size=${page.size}, sort=${#strings.arrayJoin(page.sort.toString().split(':'), ',')})}" class="btn-link">Anterior</a>
+        <span th:text="${'Página ' + (page.number + 1) + ' de ' + page.totalPages}" style="margin: 0 15px;"></span>
+        <a th:if="${page.number + 1 < page.totalPages}" th:href="@{/motos(page=${page.number + 1}, size=${page.size}, sort=${#strings.arrayJoin(page.sort.toString().split(':'), ',')})}" class="btn-link">Próxima</a>
+    </div>
+
+</main>
+
+<footer th:replace="fragments/footer :: rodape"></footer>
+</body>
+</html>
