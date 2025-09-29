@@ -26,9 +26,12 @@ public class EventoService {
 
     private EventoDTO toDTO(Evento evento) {
         EventoDTO dto = new EventoDTO();
+        dto.setId(evento.getId());
         dto.setTipo(evento.getTipo());
         dto.setDescricao(evento.getDescricao());
+        dto.setCriadoEm(evento.getCriadoEm());
         dto.setMotoId(evento.getMoto().getId());
+        dto.setMotoPlaca(evento.getMoto().getPlaca());
         return dto;
     }
 

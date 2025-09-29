@@ -1,6 +1,7 @@
 package com.fiap.auroratrace.java.dto;
 
 import jakarta.validation.constraints.*;
+import java.time.LocalDateTime;
 
 public class EventoDTO {
     @NotBlank
@@ -13,6 +14,9 @@ public class EventoDTO {
     @NotNull
     @Positive
     private Long motoId;
+
+    private String motoPlaca;
+    private LocalDateTime criadoEm;
 
     private Long id;
 
@@ -27,4 +31,10 @@ public class EventoDTO {
 
     public Long getMotoId() { return motoId; }
     public void setMotoId(Long motoId) { this.motoId = motoId; }
+
+    public String getMotoPlaca() { return motoPlaca; }
+    public void setMotoPlaca(String motoPlaca) { this.motoPlaca = motoPlaca; }
+
+    public LocalDateTime getCriadoEm() { return criadoEm; }
+    public void setCriadoEm(LocalDateTime criadoEm) { this.criadoEm = criadoEm; }
 }
