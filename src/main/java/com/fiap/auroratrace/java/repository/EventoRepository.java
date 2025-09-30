@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,4 +22,7 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 
     boolean existsByTipoAndMotoId(String tipo, Long motoId);
     Optional<Evento> findTopByMotoIdOrderByCriadoEmDesc(Long motoId);
+
+    @Transactional
+    void deleteAllByMotoId(Long motoId);
 }

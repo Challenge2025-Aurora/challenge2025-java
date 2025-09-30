@@ -14,10 +14,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class MotoService {
 
     private final MotoRepository motoRepository;
+    private final EventoService eventoService;
 
     @Autowired
-    public MotoService(MotoRepository motoRepository) {
+    public MotoService(MotoRepository motoRepository, EventoService eventoService) {
         this.motoRepository = motoRepository;
+        this.eventoService = eventoService;
     }
 
     private MotoDTO toDTO(Moto moto) {
@@ -29,10 +31,13 @@ public class MotoService {
         dto.setUltimoSlot(moto.getUltimoSlot());
         dto.setAtualizadoEm(moto.getAtualizadoEm());
         dto.setId(moto.getId());
+        dto.setDataCadastro(moto.getDataCadastro());
+
         return dto;
     }
 
     private Moto toEntity(MotoDTO dto) {
+
         return Moto.builder()
                 .placa(dto.getPlaca())
                 .modelo(dto.getModelo())
@@ -59,7 +64,6 @@ public class MotoService {
         return toDTO(motoSalva);
     }
 
-    // ...
     public MotoDTO atualizar(Long id, MotoDTO motoDTO) {
         Moto motoExistente = motoRepository.findById(id.intValue())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada com ID: " + id));
@@ -78,10 +82,11 @@ public class MotoService {
     }
 
     public void deletar(Long id) {
-        if (!motoRepository.existsById(id.intValue())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada com ID: " + id);
-        }
-        motoRepository.deleteById(id.intValue());
+        Moto motoExistente = motoRepository.findById(id.intValue())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Moto não encontrada com ID: " + id));
+
+        eventoService.deletarTodosPorMotoId(id);
+        motoRepository.delete(motoExistente);
     }
 
     public Page<MotoDTO> buscarPorStatus(String status, Pageable pageable) {

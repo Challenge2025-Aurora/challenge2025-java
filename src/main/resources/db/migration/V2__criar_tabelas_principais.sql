@@ -4,6 +4,7 @@ CREATE TABLE MOTO (
     modelo VARCHAR(255) NOT NULL,
     status VARCHAR(50) NOT NULL,
     atualizado_em TIMESTAMP,
+    data_cadastro TIMESTAMP NOT NULL,
     ultimo_setor VARCHAR(255),
     ultimo_slot VARCHAR(255)
 );

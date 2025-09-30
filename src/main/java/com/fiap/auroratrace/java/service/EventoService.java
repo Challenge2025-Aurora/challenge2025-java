@@ -86,4 +86,8 @@ public class EventoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum evento encontrado para a Moto ID: " + motoId));
         return toDTO(evento);
     }
+
+    public void deletarTodosPorMotoId(Long motoId) {
+        eventoRepository.deleteAllByMotoId(motoId);
+    }
 }

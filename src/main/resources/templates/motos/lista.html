@@ -24,7 +24,9 @@
             <th>ID</th>
             <th>Placa</th> <th>Modelo</th>
             <th>Status</th>
-            <th>Setor/Slot</th> <th>Atualizado Em</th> <th>Ações</th>
+            <th>Setor/Slot</th>
+            <th>Cadastrada Em</th> <th>Atualizado Em</th>
+            <th>Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -34,6 +36,9 @@
             <td th:text="${moto.modelo}">CBR 1000RR</td>
             <td th:text="${moto.status}">ATIVO</td>
             <td><span th:text="${moto.ultimoSetor ?: '-'}">A1</span> / <span th:text="${moto.ultimoSlot ?: '-'}">05</span></td>
+
+            <td th:text="${#temporals.format(moto.dataCadastro, 'dd/MM/yyyy')}">29/09/2025</td>
+
             <td th:text="${#temporals.format(moto.atualizadoEm, 'dd/MM HH:mm')}">29/09 10:30</td>
             <td>
                 <a th:href="@{/motos/{id}/editar(id=${moto.id})}" class="btn-link">Editar</a>

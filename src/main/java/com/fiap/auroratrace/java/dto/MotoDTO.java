@@ -27,6 +27,8 @@ public class MotoDTO {
 
     private LocalDateTime atualizadoEm;
 
+    private LocalDateTime dataCadastro;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -47,4 +49,8 @@ public class MotoDTO {
 
     public LocalDateTime getAtualizadoEm() { return atualizadoEm; }
     public void setAtualizadoEm(LocalDateTime atualizadoEm) { this.atualizadoEm = atualizadoEm; }
+
+    public LocalDateTime getDataCadastro() { return dataCadastro; }
+    public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
+
 }
