@@ -42,7 +42,7 @@ A solução é composta por três repositórios principais:
 
 1. **Clonar o Repositório:**
    ```bash
-   git clone [https://github.com/Challenge2025-Aurora/challenge2025-java.git](https://github.com/Challenge2025-Aurora/challenge2025-java.git)
+   git clone https://github.com/Challenge2025-Aurora/challenge2025-java.git
    cd challenge2025-java
    ```
    
