@@ -8,6 +8,7 @@
     --color-accent: #cbfb73;
     --color-border: #3c3559;
     --color-text-on-primary: #ffffff;
+    --color-red: #ff6b6b;
 }
 
 * {
@@ -149,6 +150,19 @@ h1 {
     cursor: pointer;
 }
 
+.btn-logout {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-red);
+    color: var(--color-text-on-primary);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    margin-top: 1.5rem;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -254,3 +268,4 @@ tr {
     margin-bottom: 2rem;
     color: var(--color-primary);
 }
+
